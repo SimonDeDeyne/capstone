@@ -37,22 +37,18 @@ body {
 }
 
 .munsellA {
-    /*fill: rgb(0,171,121);*/
     fill: rgb(255, 139, 0);
 }
 
 .munsellB {
-    /*fill: rgb(0,170,149);*/
     fill: rgb(226, 124, 0);
 }
 
 .munsellC {
-    /*fill: rgb(0,170,170);*/
     fill: rgb(175, 96, 0);
 }
 
 .munsellD {
-    /*fill: rgb(0,149,170);*/
     fill: rgb(127, 69, 0);
 }
 
