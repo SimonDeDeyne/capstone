@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="../jsPsych/snap.svg-min.js"></script>
+        <script src="../jsPsych/jspsych.js"></script>
+        <script src="../jsPsych/plugins/jspsych-html-keyboard-response.js"></script>
+        <script src="../jsPsych/plugins/jspsych-instructions.js"></script>
+        <link rel="stylesheet" href="../jsPsych/css/jspsych.css">
+    </head>
+    <style type="text/css">
+        body {
+            /*background: #fff000;*/
+            background: rgb(178, 178, 178);
+        }
+        .svg {
+          display: block;
+          margin: 0 auto;
+          position: absolute;
+          /*top: calc(50% - 20px);*/
+          left: calc(50% - 20px);
+        }
+        .foo {
+          height: 150px;
+          width: 150px;
+          position: relative;
+        }
+
+        .munsellA {
+            fill: rgb(0,171,121);
+        }
+
+        .munsellB {
+            fill: rgb(0,170,149);
+        }
+
+        .munsellC {
+            fill: rgb(0,170,170);
+        }
+
+        .munsellD {
+            fill: rgb(0,149,170);
+        }
+
+        .prompt{
+        }
+
+
+    </style>
+    <body>
+    </body>
+    <script>
+
+    /* create timeline */
+    var timeline = [];
+
+
+    var trial = {
+        type: 'html-keyboard-response',
+        stimulus: '<p style="font-size: 48px;">+</p>',
+        choices: jsPsych.NO_KEYS,
+        trial_duration: 1000,
+    };
+
+    var blue_trial = {
+      type: 'html-keyboard-response',
+      stimulus: '<svg width="300" height="300" id="circle" class="svg">\
+                    <rect x="10" y="10" width="20" height="20" class="munsellA"></rect></svg>',
+      choices: ['b', 'g'],
+      prompt: "<p>Indicate blue (b) or green (g).</p>"
+    };
+
+    var orange_trial = {
+      type: 'html-keyboard-response',
+      stimulus: '<svg width="300" height="300" id="circle" class="svg">\
+                    <rect x="10" y="10" width="20" height="20" class="munsellB"></rect></svg>',
+      choices: ['b', 'g'],
+      prompt: "<p>Indicate blue (b) or green (g).</p>"
+    }
+
+
+     /* test trials */
+    var test_stimuli = [
+      { stimulus: '<div style="height: 50px;"><svg width="40" height="40" id="circle" class="svg"><rect x="0" y="0" width="40" height="40" class="munsellA"></rect></svg></div>'},
+      { stimulus: '<div style="height: 50px;"><svg width="40" height="40" id="circle" class="svg"><rect x="0" y="0" width="40" height="40" class="munsellB"></rect></svg></div>'},
+      { stimulus: '<div style="height: 50px;"><svg width="40" height="40" id="circle" class="svg"><rect x="0" y="0" width="40" height="40" class="munsellC"></rect></svg></div>'},
+      { stimulus: '<div style="height: 50px;"><svg width="40" height="40" id="circle" class="svg"><rect x="0" y="0" width="40" height="40" class="munsellD"></rect></svg></div>'}
+
+    ];
+    var test = {
+        type: 'html-keyboard-response',
+        stimulus: jsPsych.timelineVariable('stimulus'),
+        choices: ['b', 'g'],
+        prompt: "<br><p class='prompt'>Indicate blue (b) or green (g).</p>"
+    }
+
+    
+    var fixation = {
+      type: 'html-keyboard-response',
+      stimulus: '<div style="font-size:40px; height: 50px;">+</div>',
+      choices: jsPsych.NO_KEYS,
+      trial_duration: 1000,
+      prompt: "<br><p class='prompt'>Indicate blue (b) or green (g).</p>"
+    }
+
+
+    /* define welcome message trial */
+    var welcome = {
+      type: "html-keyboard-response",
+      stimulus: "Welcome to the experiment. Press any key to begin."
+    };
+
+    timeline.push(welcome);
+
+    var test_procedure = {
+      timeline: [fixation, test],
+      timeline_variables: test_stimuli,
+      randomize_order: true,
+      repetitions: 2
+    }
+
+    timeline.push(test_procedure);
+
+var debrief_block = {
+      type: "html-keyboard-response",
+      stimulus: function() {
+
+        /*var trials = jsPsych.data.get().filter({test_part: 'test'});
+        var correct_trials = trials.filter({correct: true});
+        var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+        var rt = Math.round(correct_trials.select('rt').mean());*/
+
+        /*return "<p>You responded correctly on "+accuracy+"% of the trials.</p>"+
+        "<p>Your average response time was "+rt+"ms.</p>"+
+        "<p>Press any key to complete the experiment. Thank you!</p>";*/
+        return "<p>Thank you. This completes the color calibration phase.</p>";
+
+      }
+    };
+    timeline.push(debrief_block);
+
+
+    /* start the experiment */
+    jsPsych.init({
+      timeline: timeline,
+    on_finish: function() {
+        jsPsych.data.displayData();
+      }      
+    });
+
+/*
+        var s = Snap("#circle");
+        //var s = Snap(400,400);
+        var rectA = s.rect(10,10,20,20);
+        var rectB = s.rect(40,10,20,20);
+        var rectC = s.rect(70,10,20,20);
+        var rectD = s.rect(100,10,20,20);
+
+        rectA.addClass('munsellA');
+        rectB.addClass('munsellB');
+        rectC.addClass('munsellC');
+        rectD.addClass('munsellD');
+*/
+
+    </script>
+</html>
