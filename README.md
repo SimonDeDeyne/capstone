@@ -1,7 +1,7 @@
 # Capstone Projects 
 University of Melbourne School of Psychology, 2018
 
-##Code for the Colour and Linguistic Classifier Projects
+## Code for the Colour and Linguistic Classifier Projects
 
 The experiments are coded with (jsPsych)[https://www.jspsych.org/plugins/jspsych-html-keyboard-response/].
 
