@@ -201,10 +201,9 @@ var generateCircle = function(colorTarget, colorDistractor, targetPosition) {
 /* Get 4 practice stimuli */
 var practice_stimuli = generateCombinations();
 practice_stimuli = practice_stimuli.slice(0, 4, 1);
-
 var test_stimuli = generateCombinations();
 
-
+// TRIALS
 // https://groups.google.com/forum/#!topic/jspsych/G-AylIr7e0E
 var verbal_seed = {
     type: 'html-keyboard-response',
@@ -245,12 +244,8 @@ var fixation = {
 }
 
 
-/* define welcome message trial */
-var welcome = {
-    type: "html-keyboard-response",
-    stimulus: "Welcome to the experiment. Press any key to begin."
-};
 
+// INSTRUCTION BLOCKS
 var instructions = {
     type: 'instructions',
     pages: [
@@ -260,8 +255,18 @@ var instructions = {
         'Click next to begin.',
     ],
     show_clickable_nav: true
-}
+};
 
+var feedbackBlock = {
+    type: "html-keyboard-response",
+    stimulus: "<p><b>Break</b></p>" +
+        "<p>This concludes the practice session.</p>" +
+        "<p>If you have any further questions, please ask the experiment leader.</p>" + 
+        "<p>Remember, try to indicate the side of the coloured square as quickly as possible!<br><br></p>" + 
+        "<p>When you are ready, proceed to the experiment by pressing the Space bar.</p>",
+    timing_post_trial: 2000
+
+}
 
 
 var blockPause = {
@@ -279,8 +284,7 @@ var debrief_block = {
     }
 };
 
-// BLOCKS
-
+// TEST AND PRACTIC BLOCKS
 /* A short practice block with easy items */ 
 /* Randomizations performed in generating the stimuli, so randomize_order = false */
 var practiceblock = {

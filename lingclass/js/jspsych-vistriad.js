@@ -7,7 +7,7 @@ jsPsych.plugins["vistriad"] = (function() {
 
   var plugin = {};
 
-  // Check why preload might not work...
+  // TODO: preloading
   //jsPsych.pluginAPI.registerPreload('vistriad');
 
   plugin.info = {
@@ -32,13 +32,6 @@ jsPsych.plugins["vistriad"] = (function() {
           default: undefined,
           description: 'The target B image to be displayed.'
         },
-/*        digitSpan: {
-          type: jsPsych.plugins.parameterType.HTML_STRING,
-          pretty_name: 'Digit Span',
-          default: undefined,
-          description: 'The digitSpan to judge.'
-        }
-*/
       },
 
       left_key: {
@@ -136,10 +129,6 @@ jsPsych.plugins["vistriad"] = (function() {
         showBlankScreen();
     },trial.gap_duration);
   }
-      /*jsPsych.pluginAPI.setTimeout(function() {
-        showBlankScreen()
-      }, trial.gap_duration);*/
-    //}
 
 
     function showBlankScreen() { 
@@ -182,13 +171,6 @@ jsPsych.plugins["vistriad"] = (function() {
 
     }
     
-    // data saving
-    var trial_data = {
-      parameter_name: 'parameter value'
-    };
-
-    // end trial
-    //jsPsych.finishTrial(trial_data);
   };
 
   return plugin;

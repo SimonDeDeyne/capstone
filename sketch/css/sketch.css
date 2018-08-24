@@ -1,0 +1,15 @@
+#cue {
+	visibility: hidden;
+	animation: 2s linear 1s fadeIn;
+  	animation-fill-mode: forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+  }
+}
