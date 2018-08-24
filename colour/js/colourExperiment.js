@@ -90,7 +90,7 @@ var generateDigitspans = function(nTrials) {
     'use strict';
     var testStimuli = [];
     var item = generateString();
-    //console.log(item);
+
     var formatItem = '<div class="verbalStim">' + item + '</div>';
     testStimuli.push({ verbalStimulus: formatItem });
     for (var i = 1; i < nTrials; i++) {
@@ -103,10 +103,13 @@ var generateDigitspans = function(nTrials) {
 };
 
 
+/*
+Generate the stimuli for the experiment. Manually adjust the first trials of the block
+to remove the response prompt.
+*/
 
 var generateCombinations = function() {
     var test_stimuli = [];
-    //var verbal_stimuli = generateDigitspans(12*12);
     var colorCombo = [
         { t: 'A', distractor: 'B' },
         { t: 'A', distractor: 'C' },
@@ -175,9 +178,6 @@ var generateCircle = function(colorTarget, colorDistractor, targetPosition) {
     var coordsX = [145, 59, 102, 15, 0, 0, 15, 59, 102, 164, 164, 145];
     var coordsY = [15, 1, 1, 15, 59, 102, 145, 164, 164, 59, 102, 145];
 
-    /*    console.log(colorTarget);
-        console.log(colorDistractor);
-    */
     var rects = [];
     var rectSize = 30;
 
@@ -198,24 +198,12 @@ var generateCircle = function(colorTarget, colorDistractor, targetPosition) {
     return stim;
 };
 
+/* Get 4 practice stimuli */
+var practice_stimuli = generateCombinations();
+practice_stimuli = practice_stimuli.slice(0, 4, 1);
 
 var test_stimuli = generateCombinations();
 
-
-/*
-var digitSeries = {
-    type: 'html-keyboard-response',    
-    choices: jsPsych.NO_KEYS,
-    trial_duration: 200,
-    timeline: [
-        {stimulus: '<div class="fixation">1</div>'},
-        {stimulus: '<div class="fixation">2</div>'},
-        {stimulus: '<div class="fixation">3</div>'},
-        {stimulus: '<div class="fixation">4</div>'}
-    ],
-    prompt: "<br><p class='prompt'></p>"   
-}
-*/
 
 // https://groups.google.com/forum/#!topic/jspsych/G-AylIr7e0E
 var verbal_seed = {
@@ -291,6 +279,9 @@ var debrief_block = {
     }
 };
 
+// BLOCKS
+
+/* A short practice block with easy items */ 
 /* Randomizations performed in generating the stimuli, so randomize_order = false */
 var practiceblock = {
     timeline: [verbal, fixation, test],
@@ -300,6 +291,9 @@ var practiceblock = {
 
 };
 
+
+/* The experiment is split into separate blocks giving participants a break after 10 minutes */ 
+/* Additional blocks will need to be added once all stimuli are decided */
 var testblock_1 = {
     timeline: [verbal, fixation, test],
     timeline_variables: test_stimuli.slice(0, 4, 1),
@@ -316,17 +310,19 @@ var testblock_2 = {
 
 
 var experiment_procedure = {
-    timeline: [instructions, practiceblock,feedbackBlock,testblock_1, blockPause, testblock_2, debrief_block]
+    timeline: [instructions, practiceblock,feedbackBlock, testblock_1, blockPause, testblock_2, debrief_block]
 }
 
 timeline.push(experiment_procedure);
 
-// var zz = jsPsych.data.get().filter({test_part: 'visualSearch'});
-// zz.csv() gives you the data
+// var csvData = jsPsych.data.get().filter({test_part: 'visualSearch'});
+// csvData.csv(); // CSV formatted data that can be accessed from the Console Panel (Ctrl + i in Chrome)
+
 /* start the experiment */
 jsPsych.init({
     timeline: timeline,
     on_finish: function() {
+        // The following line is for testing purposes only...
         jsPsych.data.displayData();
     }
 });

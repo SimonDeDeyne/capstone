@@ -18,7 +18,7 @@ In Chrome you can access the [Development Tools](https://developers.google.com/w
 
 ## Obtaining the data
 The experiments provided here are for testing only. They will not write data to the server, but you can manually inspect the data
-and copy into a text or Excel file. 
+and copy into a text or Excel file. The actual experiments will include some additional code to save the responses to the server.
 
 For the colour experiment, you can obtain the data by entering <code>jsPsych.data.get().filter({test_part: 'visualSearch'}).csv()</code> into the Console Bar using Chrome (use <code>Ctrl + i</code> to activate it).
 
