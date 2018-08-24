@@ -153,8 +153,13 @@ var generateCombinations = function() {
         }
 
         test_stimuli[t]['verbalStimulus'] = v;
+        test_stimuli[t]['prompt'] = '<br><p class="prompt">Press <em>Space</em> if item is same.</p>';
         test_stimuli[t]['data']['verbalSame'] = same;
     }
+
+    // For the first item of the block, omit the digit span prompt
+    test_stimuli[0].prompt = '';
+    test_stimuli[5].prompt = '';
 
 
     return test_stimuli;
@@ -222,10 +227,10 @@ var verbal_seed = {
 var verbal = {
     type: 'html-keyboard-response',
     stimulus: jsPsych.timelineVariable('verbalStimulus'),
-    trial_duration: 2000,
+    trial_duration: 3000,
     response_ends_trial: false,
     choices: 32,
-    prompt: "<br><p class='prompt'>Press <em>Space</em> if item is same.</p>"
+    prompt: jsPsych.timelineVariable('prompt')
 }
 
 
@@ -258,6 +263,18 @@ var welcome = {
     stimulus: "Welcome to the experiment. Press any key to begin."
 };
 
+var instructions = {
+    type: 'instructions',
+    pages: [
+        'Welcome to the experiment. ',
+        'Use your left and right index fingers to press the f or j key.<br> Use either thumb to press the space bar.<br>',
+        'Here is a picture of what you will do: <img src="img/1.png"></img>',
+        'Click next to begin.',
+    ],
+    show_clickable_nav: true
+}
+
+
 
 var blockPause = {
     type: "html-keyboard-response",
@@ -274,24 +291,32 @@ var debrief_block = {
     }
 };
 
+/* Randomizations performed in generating the stimuli, so randomize_order = false */
+var practiceblock = {
+    timeline: [verbal, fixation, test],
+    timeline_variables: practice_stimuli,
+    randomize_order: false,
+    repetitions: 1
 
-var block_1 = {
+};
+
+var testblock_1 = {
     timeline: [verbal, fixation, test],
     timeline_variables: test_stimuli.slice(0, 4, 1),
-    randomize_order: true,
+    randomize_order: false,
     repetitions: 1
-}
+};
 
-var block_2 = {
+var testblock_2 = {
     timeline: [verbal, fixation, test],
     timeline_variables: test_stimuli.slice(5, 9, 1),
-    randomize_order: true,
+    randomize_order: false,
     repetitions: 1
 }
 
 
 var experiment_procedure = {
-    timeline: [welcome, block_1, blockPause, block_2, debrief_block]
+    timeline: [instructions, practiceblock,feedbackBlock,testblock_1, blockPause, testblock_2, debrief_block]
 }
 
 timeline.push(experiment_procedure);

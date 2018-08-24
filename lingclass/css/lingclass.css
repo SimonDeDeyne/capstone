@@ -1,12 +1,74 @@
-
-#stimA {
-	background: green;
+img { 
+  object-fit: contain;
+  max-width:100%;
 }
 
-#stimB {
-	background: blue
+#targetA {
+	margin-right: 50px;
+	min-height: 150px;
 }
 
-#stimC {
-	background: red;
+#targetB {
+	margin-left: 50px;
+	min-height: 150px;
+}
+
+.hidden {
+	visibility: hidden;
+	animation: 1s linear 1s fadeIn;
+  	animation-fill-mode: forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.row {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+
+    -webkit-box-orient: horizontal; 
+    -moz-box-orient: horizontal;
+    box-orient: horizontal;
+    flex-direction: row;
+
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    box-pack: center;
+    justify-content: center;
+
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    box-align: center;  
+    align-items: center;
+
+}
+
+.cell {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    box-flex: 1;
+    -webkit-flex: 1 1 auto;
+    flex: 1 1 auto; 
+
+    padding: 15px;
+    margin: 15px;
+
+    text-align: center;
+    align-items: center;
+	
+	max-height: 150px;
+	max-width: 150px;
+
+
+
 }
