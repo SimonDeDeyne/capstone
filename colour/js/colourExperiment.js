@@ -10,6 +10,12 @@ The experiment has only been tested with recent versions of Chrome.
 var timeline = [];
 
 
+function saveData() {
+    var timeStamp = Math.floor(Date.now());
+    jsPsych.data.get().localSave('csv', 'colourSearch' + timeStamp + '.csv');
+
+}
+
 // https://github.com/jspsych/jsPsych/issues/193
 var generateString = function() {
     'use strict';
@@ -261,8 +267,8 @@ var feedbackBlock = {
     type: "html-keyboard-response",
     stimulus: "<p><b>Break</b></p>" +
         "<p>This concludes the practice session.</p>" +
-        "<p>If you have any further questions, please ask the experiment leader.</p>" + 
-        "<p>Remember, try to indicate the side of the coloured square as quickly as possible!<br><br></p>" + 
+        "<p>If you have any further questions, please ask the experiment leader.</p>" +
+        "<p>Remember, try to indicate the side of the coloured square as quickly as possible!<br><br></p>" +
         "<p>When you are ready, proceed to the experiment by pressing the Space bar.</p>",
     timing_post_trial: 2000
 
@@ -285,7 +291,7 @@ var debrief_block = {
 };
 
 // TEST AND PRACTIC BLOCKS
-/* A short practice block with easy items */ 
+/* A short practice block with easy items */
 /* Randomizations performed in generating the stimuli, so randomize_order = false */
 var practiceblock = {
     timeline: [verbal, fixation, test],
@@ -296,7 +302,7 @@ var practiceblock = {
 };
 
 
-/* The experiment is split into separate blocks giving participants a break after 10 minutes */ 
+/* The experiment is split into separate blocks giving participants a break after 10 minutes */
 /* Additional blocks will need to be added once all stimuli are decided */
 var testblock_1 = {
     timeline: [verbal, fixation, test],
@@ -314,19 +320,19 @@ var testblock_2 = {
 
 
 var experiment_procedure = {
-    timeline: [instructions, practiceblock,feedbackBlock, testblock_1, blockPause, testblock_2, debrief_block]
+    timeline: [instructions, practiceblock, feedbackBlock, testblock_1, blockPause, testblock_2, debrief_block]
 }
 
 timeline.push(experiment_procedure);
-
-// var csvData = jsPsych.data.get().filter({test_part: 'visualSearch'});
-// csvData.csv(); // CSV formatted data that can be accessed from the Console Panel (Ctrl + i in Chrome)
 
 /* start the experiment */
 jsPsych.init({
     timeline: timeline,
     on_finish: function() {
         // The following line is for testing purposes only...
-        jsPsych.data.displayData();
+        // jsPsych.data.displayData();
+        saveData();
+        console.log('Experiment finished.');
+
     }
 });

@@ -58,7 +58,6 @@ function counterBalanceStimuli(stimuli) {
 
 function saveData() {
     var timeStamp = Math.floor(Date.now());
-    //jsPsych.data.get().filter({ test_part: 'fixation' }).localSave('csv', 'lingclass' + timeStamp + '.csv');
     jsPsych.data.get().localSave('csv', 'lingclass' + timeStamp + '.csv');
 
 }
@@ -158,4 +157,3 @@ jsPsych.init({
 
     }
 });
-// show the images

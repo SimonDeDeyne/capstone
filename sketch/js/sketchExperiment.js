@@ -1,135 +1,135 @@
-var el = document.getElementById('sketchpad');
-var pad = new Sketchpad(el);
-
+// see http://paperjs.org/tutorials/getting-started/using-javascript-directly/
 // Anonymous self invoking function
-(function () {
-  initialize();
+(function() {
+    initialize();
 })();
 
-// setLineColor
-function setLineColor(e) {
-    var color = e.target.value;
-    if (!color.startsWith('#')) {
-        color = '#' + color;
+
+// Write to an svg file with name = cue + timestamp
+function saveData(data) {
+    var timeStamp = Math.floor(Date.now());
+    // get the cue
+    var cue = document.getElementById('cue').innerHTML;    
+    var fileContent = new Blob([data], { type: "text/plain;charset=utf-8" });
+    saveAs(fileContent, cue + '.' +  timeStamp + ".svg");
+}
+
+
+function initialize() {
+    sessionStorage.ctr = 0;
+    updateCue();
+}
+
+
+function countDown() {
+    var timeleft = 0;
+    var downloadTimer = setInterval(function() {
+        document.getElementById("countdown").innerHTML = 50 + --timeleft;
+        if (timeleft <= -50)
+            clearInterval(downloadTimer);
+    }, 1000);
+}
+
+
+function updateCue() {
+
+    var cues = ['dog', 'cat', 'telephone', 'dolphin', 'mermaid'];
+    sessionStorage.ctr = parseInt(sessionStorage.ctr) + 1;
+
+    // add a cue word
+    var cue = document.getElementById('cue')
+    cue.innerHTML = cues[parseInt(sessionStorage.ctr)];
+    countDown();
+}
+
+
+// Only executed our code once the DOM is ready.
+window.onload = function() {
+
+
+   paper.setup('sketchpad');
+   with (paper) {
+   
+
+    var tool = new Tool();
+
+    // Show debug info on simplified paths
+/*    var textItem = new PointText({
+        content: 'Click and drag to draw a line.',
+        point: new paper.Point(20, 30),
+        fillColor: 'black',
+    });
+*/
+
+    // Define a mousedown and mousedrag handler
+    tool.onMouseDown = function(event) {
+        var RT = event.timeStamp;
+        path = new Path();
+        path.data.RT = RT;
+        path.strokeColor = 'black';
+        path.add(event.point);
+        path.strokeWidth = 3;
+        path.strokeCap = 'round';
+        path.strokeJoin = 'round';
     }
-    pad.setLineColor(color);
-}
 
-function initialize(){
-  sessionStorage.ctr = 0;
-  updateCue();
-}
-
-
-function countDown(){
-  var timeleft = 0;
-  var downloadTimer = setInterval(function(){
-    //document.getElementById("countdown").innerHTML = 40 - --timeleft;
-    document.getElementById("countdown").innerHTML = 40 + --timeleft;
-    if(timeleft <= -40)
-      clearInterval(downloadTimer);
-  },1000); 
-}
-
-
-function updateCue(){
-
-  var cues = ['dog','cat','telephone','mermaid'];
-  sessionStorage.ctr = parseInt(sessionStorage.ctr) + 1;
-
-  // add a cue word
-  var cue = document.getElementById('cue')
-  cue.innerHTML = cues[parseInt(sessionStorage.ctr)];
-  countDown();
-}
-
-//document.getElementById('line-color-input').oninput = setLineColor;
-
-// setLineSize
-function setLineSize(e) {
-    var size = e.target.value;
-    pad.setLineSize(size);
-}
-//document.getElementById('line-size-input').oninput = setLineSize;
-
-// undo
-function undo() {
-    pad.undo();
-}
-document.getElementById('undo').onclick = undo;
-
-// redo
-function redo() {
-    pad.redo();
-}
-document.getElementById('redo').onclick = redo;
-
-// clear
-function clear() {
-    pad.clear();
-}
-document.getElementById('clear').onclick = clear;
+    tool.onMouseDrag = function(event) {
+        path.add(event.point);
+    }
 
 
 
-document.getElementById('done').onclick = function (){
-  createSVG(pad.strokes);
-  clear();
-  updateCue();
-};
+    // When the mouse is released, we simplify the path:
+    tool.onMouseUp = function(event) {
+        var RT2 = event.timeStamp;
+        //console.log(path.getData().RT);
+        path.data.RT = [path.data.RT, RT2];
+        console.log(path.getData().RT);
+        var segmentCount = path.segments.length;
 
+        // When the mouse is released, simplify it:
+        path.simplify(1);
 
-// resize
-window.onresize = function (e) {
-  pad.resize(el.offsetWidth);
-}
+        // Select the path, so we can see its segments:
+        path.fullySelected = false;
 
-
-function createSVG(strokes){
-  var h = pad.canvas.height;
-  var w = pad.canvas.width;
-
-  // get the cue
-  var cue = document.getElementById('cue').innerHTML;
-
-  // initialize SVG.js
-  var draw = SVG('drawing').size(h,w).id('cow');
-  draw.hide();      
-
-  var path = '';
-  var RT = 0;
-  for (s in strokes) {
-      var points = strokes[s].points;
-      RT = strokes[s].RT;
-      for (p in points) {
-
-        // start of path
-        if(p == 0){
-          path = path + 'M' + points[p].x * w + ' ' + points[p].y * h;
-        }
-
-        path = path + 'L' + points[p].x * w + ' ' + points[p].y * h;
+        var newSegmentCount = path.segments.length;
+        var difference = segmentCount - newSegmentCount;
+        var percentage = 100 - Math.round(newSegmentCount / segmentCount * 100);
         
-      }
-    draw.path(path)
-        .fill('none')
-        .stroke({ color: '#f06', width: 3, linecap: 'round', linejoin: 'miter', miterlimit: '10'})
-        .data('RT', RT);
-    //rect.data('key', { value: { data: 0.3 }})
+        // textItem.content = difference + ' of the ' + segmentCount + ' segments were removed. Saving ' + percentage + '%';
 
-    // add data-RT to path (see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/data-*)
-    
-  }
-  
-  //console.log(draw.svg());
-  var blob = new Blob([draw.svg()], {type: "text/plain;charset=utf-8"});
-  saveAs(blob, cue + ".svg");
+    }
 
+
+    function sketchDone() {
+        console.log('done');
+        var mysvg = project.exportSVG({asString:true});
+        saveData(mysvg);
+        project.clear();
+        updateCue();
+    }
+
+
+    document.getElementById('done').onclick = sketchDone;
+
+    // undo
+    function undo() {
+        console.log('undo');
+        path.removeSegment(0);
+    }
+
+    document.getElementById('undo').onclick = undo;
+
+
+
+    // clear
+    function clear() {
+        console.log('clear');
+        project.clear();
+    }
+
+    document.getElementById('clear').onclick = clear;
+
+    }
 }
-
-
-
-
-// save the figure
-//var z = pad.toJSON();
-

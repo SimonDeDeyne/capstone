@@ -6,7 +6,7 @@
 
 
 section {
-    padding: 2rem 0;
+    padding: 1rem 0;
 }
 
 .text-center {
@@ -15,7 +15,8 @@ section {
 
 @media (min-width: 550px) {
     section:first-child {
-        margin-top: 8rem;
+        /*margin-top: 8rem;*/
+        margin-top: 2rem;
     }
 }
 
