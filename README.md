@@ -34,8 +34,8 @@ Informed consents and plain language statements can\ be given separately as a pr
 Debriefing is done at the end of the experiments. Just take a look at the code and adapt the debriefing statements where needed. Don't forget to test the updated scripts to see if they still work!
 
 ### Colour study
-The main code of the experiment can be found in [lingclass.js](./js/lingclass.js).
-This code contains the instructions and stimuli and some timing parameters.
+The main code of the experiment can be found in [lingclass.js](./lingclass/js/lingclass.js).
+This code contains the instructions and stimuli and some timing parameters. A template for the 12-position colour circle is also included in the [colour/img](./colour/img/) folder.
 
 
 ### Linguistic Classifier study
@@ -44,7 +44,8 @@ This code contains the instructions and stimuli and some timing parameters.
 
 
 ### Sketch study
-A series of words is shown at the top of the screen and each participant gets 50 seconds to sketch the word. The result is saved as an svg file, from which we can extract the ordered strokes and the onset time of each stroke. 
+A series of words is shown at the top of the screen and each participant gets 50 seconds to sketch the word. Path simplification is used to reduce the sketch complexity. The result is saved as an svg file, from which we can extract the ordered strokes and the onset time of each stroke. 
 Some of the techniques might not work across browsers and platforms, so make sure to pilot this.
 Consider using a single device with stylus-support to get good drawings and reduce device-specific  variability.
+
 
