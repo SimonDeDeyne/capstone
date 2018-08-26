@@ -19,6 +19,13 @@ img {
   	animation-fill-mode: forwards;
 }
 
+.responded {
+    /*background-color: pink;*/
+    font-weight:  bold;
+    border: 1px;
+    border-color: #000000;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
