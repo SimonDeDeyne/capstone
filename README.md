@@ -34,12 +34,12 @@ Informed consents and plain language statements can\ be given separately as a pr
 Debriefing is done at the end of the experiments. Just take a look at the code and adapt the debriefing statements where needed. Don't forget to test the updated scripts to see if they still work!
 
 ### Colour study
-The main code of the experiment can be found in [lingclass.js](./lingclass/js/lingclass.js).
+The main code of the experiment can be found in [colourExperiment.js](./colour/js/colourExperiment.js).
 This code contains the instructions and stimuli and some timing parameters. A template for the 12-position colour circle is also included in the [colour/img](./colour/img/) folder.
 
 
 ### Linguistic Classifier study
-The main code of the experiment can be found in [lingclass.js](./js/lingclass.js).
+The main code of the experiment can be found in [lingclass.js](./lingclass/js/lingclass.js).
 This code contains the instructions and stimuli and some timing parameters.
 
 
