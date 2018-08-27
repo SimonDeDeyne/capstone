@@ -2,6 +2,14 @@ body {
     background: rgb(178, 178, 178);
 }
 
+
+.responded {
+    /*background-color: pink;*/
+    font-weight:  bold;
+    border: 1px;
+    border-color: #000000;
+}
+
 #svg-container {
     display: flex;
     align-items: center;

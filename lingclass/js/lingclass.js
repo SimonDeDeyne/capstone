@@ -144,8 +144,20 @@ var block_2 = {
     repetitions: 1
 };
 
+var fullscreenON ={
+    type: 'fullscreen',
+    full_screen_mode: true
+};
+
+var fullscreenOFF ={
+    type: 'fullscreen',
+    full_screen_mode: false,
+    message: '<p>You will now exit full screen mode'
+};
+
+
 var timeline = [];
-timeline.push(instructions, block_1, debrief_block, block_2, debrief_experiment);
+timeline.push(fullscreenON,instructions, block_1, debrief_block, block_2, fullscreenOFF,debrief_experiment);
 
 
 jsPsych.init({

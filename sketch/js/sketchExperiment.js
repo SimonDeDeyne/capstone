@@ -16,30 +16,58 @@ function saveData(data) {
 
 
 function initialize() {
-    sessionStorage.ctr = 0;
+    sessionStorage.ctr = 0;    
     updateCue();
+    
 }
 
+// Countdown variables
 
-function countDown() {
-    var timeleft = 0;
-    var downloadTimer = setInterval(function() {
-        document.getElementById("countdown").innerHTML = 50 + --timeleft;
-        if (timeleft <= -50)
-            clearInterval(downloadTimer);
-    }, 1000);
-}
+var drawingSeconds = 50;
+var t, count;
+    
+function cddisplay() {
+    // displays time in span
+    document.getElementById('countdown').innerHTML = count;
+};
+    
+function countdown() {
+    // starts countdown
+    cddisplay();
+    if (count == 0) {
+        // time is up
+    } else {
+        count--;
+        t = setTimeout("countdown()", 1000);
+    }
+};
+    
+function cdpause() {
+    // pauses countdown
+    clearTimeout(t);
+};
+
+function cdreset() {
+    // resets countdown
+    cdpause();
+    count = 50;
+    console.log(count, + 'is count');
+    cddisplay();
+};
+
 
 
 function updateCue() {
+    cdreset();
 
     var cues = ['dog', 'cat', 'telephone', 'dolphin', 'mermaid'];
     sessionStorage.ctr = parseInt(sessionStorage.ctr) + 1;
 
     // add a cue word
     var cue = document.getElementById('cue')
-    cue.innerHTML = cues[parseInt(sessionStorage.ctr)];
-    countDown();
+    cue.innerHTML = cues[parseInt(sessionStorage.ctr)];   
+    countdown();
+
 }
 
 

@@ -13,3 +13,8 @@
     opacity: 1;
   }
 }
+
+#countdown {
+  line-height: 40px;
+  font-family: sans-serif;
+}

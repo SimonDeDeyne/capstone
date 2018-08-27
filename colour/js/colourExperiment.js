@@ -29,12 +29,11 @@ var generateString = function() {
 /*
     Mutate the string by permuting position or changing integer
 */
-var mutateString = function(digitSpan, mutationProb) {
+var mutateString = function(digitSpan, mutationProb,randomNumber) {
     'use strict';
-    var m = new MersenneTwister();
-    var randomNumber = m.random();
     if (randomNumber < mutationProb) {
 
+        console.log(digitSpan + ' mutated ' + randomNumber);
         var n = [1, 2, 2, 3, 3];
         var edits = ['m', 'm', 'p_left', 'p_right'];
         n = jsPsych.randomization.shuffle(n);
@@ -89,6 +88,11 @@ var mutateString = function(digitSpan, mutationProb) {
         digitSpan = s.join(' ');
 
     }
+    else {
+        console.log(digitSpan + ' same');
+    }
+    
+
     return digitSpan;
 };
 
@@ -96,11 +100,14 @@ var generateDigitspans = function(nTrials) {
     'use strict';
     var testStimuli = [];
     var item = generateString();
-
+    var m = new MersenneTwister();
     var formatItem = '<div class="verbalStim">' + item + '</div>';
     testStimuli.push({ verbalStimulus: formatItem });
-    for (var i = 1; i < nTrials; i++) {
-        var item = mutateString(item, 0.5);
+    for (var i = 1; i < nTrials; i++) {        
+        
+        var randomNumber = m.random();
+
+        item = mutateString(item, 0.5,randomNumber);
         formatItem = '<div class="verbalStim">' + item + '</div>';
         testStimuli.push({ verbalStimulus: formatItem });
     }
@@ -222,7 +229,14 @@ var verbal = {
     stimulus: jsPsych.timelineVariable('verbalStimulus'),
     trial_duration: 3000,
     response_ends_trial: false,
-    choices: 32,
+    choices: jsPsych.ALL_KEYS,
+    on_finish: function(data) {
+        if (data.key_press) {
+            console.log(data.key_press);
+        }
+        
+    },
+    data: {test_part: 'verbal'},
     prompt: jsPsych.timelineVariable('prompt')
 }
 
@@ -316,12 +330,39 @@ var testblock_2 = {
     timeline_variables: test_stimuli.slice(5, 9, 1),
     randomize_order: false,
     repetitions: 1
-}
+};
 
+var testblock_3 = {
+    timeline: [verbal, fixation, test],
+    timeline_variables: test_stimuli.slice(5, 9, 1),
+    randomize_order: false,
+    repetitions: 1
+};
+
+
+var testblock_4 = {
+    timeline: [verbal, fixation, test],
+    timeline_variables: test_stimuli.slice(5, 9, 1),
+    randomize_order: false,
+    repetitions: 1
+};
+
+
+var fullscreenON ={
+    type: 'fullscreen',
+    full_screen_mode: true
+};
+
+var fullscreenOFF ={
+    type: 'fullscreen',
+    full_screen_mode: false,
+    message: '<p>You will now exit full screen mode'
+};
 
 var experiment_procedure = {
-    timeline: [instructions, practiceblock, feedbackBlock, testblock_1, blockPause, testblock_2, debrief_block]
-}
+    timeline: [fullscreenON,instructions, practiceblock, feedbackBlock, 
+    testblock_1, blockPause, testblock_2, fullscreenOFF,debrief_block]
+};
 
 timeline.push(experiment_procedure);
 
