@@ -36,7 +36,7 @@ This code contains the instructions and stimuli and some timing parameters. A te
 
 ### Linguistic Classifier study
 The main code of the experiment can be found in [lingclass.js](./lingclass/js/lingclass.js).
-This code contains the instructions and stimuli and some timing parameters.
+This code contains the instructions and stimuli and some timing parameters. The stimuli are taken from the [MultiPic](https://www.bcbl.eu/databases/multipic/) project which includes colour and greyscale linedraws for 750 words.
 
 
 ### Sketch study
