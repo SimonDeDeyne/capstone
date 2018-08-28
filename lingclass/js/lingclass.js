@@ -14,26 +14,27 @@ var instructions = {
 };
 
 
-
+/*
 var test_stimuli = [{
-        stimulus: { cue: './img/1.png', targetA: './img/2.png', targetB: './img/3.png' },
+        stimulus: { cue: './img/453.png', targetA: './img/590.png', targetB: './img/649.png' },
         verbalStimulus: '2 3 4 5 6',
         prompt: '',
         data: { test_part: 'vistriad' }
     },
     {
-        stimulus: { cue: './img/2.png', targetA: './img/4.png', targetB: './img/3.png' },
+        stimulus: { cue: './img/564.png', targetA: './img/216.png', targetB: './img/551.png' },
         verbalStimulus: '2 3 4 5 6',
         prompt: "<br><p class='prompt'>Press <em>Space</em> if item is same.</p>",
         data: { test_part: 'vistriad' }
     },
     {
-        stimulus: { cue: './img/3.png', targetA: './img/1.png', targetB: './img/5.png' },
+        stimulus: { cue: './img/653.png', targetA: './img/75.png', targetB: './img/552.png' },
         verbalStimulus: '2 3 4 5 6',
         prompt: "<br><p class='prompt'>Press <em>Space</em> if item is same.</p>",
         data: { test_part: 'vistriad' }
     }
 ];
+*/
 
 
 // Counterbalance position of A and B
@@ -128,9 +129,11 @@ var debrief_experiment = {
 
 // Experiment blocks: note randomization is done in the stimulus generation phase
 var block_1 = {
-    timeline: [verbal, fixation, test],
+    //timeline: [verbal, fixation, test],
+    timeline: [fixation, test],
     //timeline_variables: test_stimuli.slice(0, 4, 1),
     timeline_variables: test_stimuli,
+    data: { test_part: 'vistriad' },
     randomize_order: false,
     repetitions: 1
 };
@@ -141,6 +144,7 @@ var block_2 = {
     //timeline_variables: test_stimuli.slice(0, 4, 1),
     timeline_variables: test_stimuli,
     randomize_order: false,
+    data: { test_part: 'vistriad' },
     repetitions: 1
 };
 
@@ -157,7 +161,9 @@ var fullscreenOFF ={
 
 
 var timeline = [];
-timeline.push(fullscreenON,instructions, block_1, debrief_block, block_2, fullscreenOFF,debrief_experiment);
+
+timeline.push(block_1);
+//timeline.push(fullscreenON,instructions, block_1, debrief_block, block_2, fullscreenOFF,debrief_experiment);
 
 
 jsPsych.init({
