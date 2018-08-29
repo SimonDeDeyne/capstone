@@ -52,6 +52,13 @@ jsPsych.plugins.vistriad = (function() {
                 default: 5000,
                 description: 'How long to show a blank screen in between the two stimuli.'
             },
+            cue_duration: {
+                type: jsPsych.plugins.parameterType.INT,
+                pretty_name: 'Cue stimulus duration',
+                default: 1000,
+                description: 'How long to show the cue stimulus for in milliseconds.'
+
+            },
             second_stim_duration: {
                 type: jsPsych.plugins.parameterType.INT,
                 pretty_name: 'Second stimulus duration',
@@ -63,6 +70,13 @@ jsPsych.plugins.vistriad = (function() {
                 pretty_name: 'Prompt',
                 default: null,
                 description: 'Choose the most related picture (left) or (right).'
+            },
+            show_targets: {
+                type: jsPsych.plugins.parameterType.BOOL,
+                pretty_name: 'Show targets',
+                default: false,
+                description: 'If true, targets are shown.'
+
             }
         }
     };
@@ -71,41 +85,69 @@ jsPsych.plugins.vistriad = (function() {
 
     plugin.trial = function(display_element, trial) {
 
-        display_element.innerHTML = [
-            '<div class="content">',
-            '<div class="row">',
-            '<div class="cell hidden" id="targetA">',
-            '<img src="' + trial.stimulus.targetA + '"</img>',
-            '</div>',
-            '<div class="cell hidden" id="targetB">',
-            '<img src="' + trial.stimulus.targetB + '"</img>',
-            '</div>',
-            '</div>',
-            '<div class="row">',
-            '<div class="cell" id="cue"><img class="cue" src="' + trial.stimulus.cue + '"></img></div>',
-            '</div>',
-            '</div>'].join('');
+        console.log(trial);
+        if (trial.show_targets == true){
+            console.log('showing targets');
+            display_element.innerHTML = [
+                '<div class="content">',
+                '<div class="row">',
+                '<div class="cell hidden" id="targetA">',
+                '<img src="' + trial.stimulus.targetA + '"</img>',
+                '</div>',
+                '<div class="cell hidden" id="targetB">',
+                '<img src="' + trial.stimulus.targetB + '"</img>',
+                '</div>',
+                '</div>',
+                '<div class="row">',
+                '<div class="cell" id="cue"><img class="cue" src="' + trial.stimulus.cue + '"></img></div>',
+                '</div>',
+                '</div>'].join('');
 
-        jsPsych.pluginAPI.getKeyboardResponse({
-            callback_function: afterKeyboardResponse,
-            valid_responses: trial.advance_key,
-            rt_method: 'date',
-            persist: false,
-            allow_held_key: false
-        });
+            jsPsych.pluginAPI.getKeyboardResponse({
+                callback_function: afterKeyboardResponse,
+                valid_responses: trial.advance_key,
+                rt_method: 'date',
+                persist: false,
+                allow_held_key: false
+            });
 
 
 
-        jsPsych.pluginAPI.setTimeout(function() {
-            removeTargets();
-        }, trial.gap_duration);
+            jsPsych.pluginAPI.setTimeout(function() {
+                removeTargets();
+            }, trial.gap_duration);
+
+        }
+        else {
+            display_element.innerHTML = [
+                '<div class="content">',
+                '<div class="row">',
+                '<div class="cell" id="targetA">',
+                '</div>',
+                '<div class="cell" id="targetB">',
+                '</div>',
+                '</div>',
+                '<div class="row">',
+                '<div class="cell" id="cue"><img class="cue" src="' + trial.stimulus.cue + '"></img></div>',
+                '</div>',
+                '</div>',
+            ].join('');
+
+            jsPsych.pluginAPI.setTimeout(function() {
+
+                jsPsych.finishTrial();
+
+            }, trial.cue_duration);
+
+
+
+        }
 
 
 
         function afterKeyboardResponse(info) {
             first_stim_info = info;
             console.log(info);
-            //showBlankScreen();
         }
 
 

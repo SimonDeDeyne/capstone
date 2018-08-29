@@ -1,5 +1,16 @@
 /*
 Experiment on lexical processing effects of visually presented words in English or Mandarin.
+
+https://groups.google.com/forum/#!topic/jspsych/tECOqs3pWHo
+Too fast responses: This feature isn't built into any particular plugin yet, 
+but you assemble a pair of trials to make it work. 
+I would use the html-keyboard-response plugin. 
+Create two trials with identical stimulus parameters. 
+The first trial should have choices: jsPsych.NO_KEYS and trial_duration: <minimum_time>. 
+The second trial should have the desired keyboard responses. 
+From the perspective of the subject, this will appear to be a single screen.
+
+
 */
 
 
@@ -12,29 +23,6 @@ var instructions = {
     ],
     show_clickable_nav: true
 };
-
-
-/*
-var test_stimuli = [{
-        stimulus: { cue: './img/453.png', targetA: './img/590.png', targetB: './img/649.png' },
-        verbalStimulus: '2 3 4 5 6',
-        prompt: '',
-        data: { test_part: 'vistriad' }
-    },
-    {
-        stimulus: { cue: './img/564.png', targetA: './img/216.png', targetB: './img/551.png' },
-        verbalStimulus: '2 3 4 5 6',
-        prompt: "<br><p class='prompt'>Press <em>Space</em> if item is same.</p>",
-        data: { test_part: 'vistriad' }
-    },
-    {
-        stimulus: { cue: './img/653.png', targetA: './img/75.png', targetB: './img/552.png' },
-        verbalStimulus: '2 3 4 5 6',
-        prompt: "<br><p class='prompt'>Press <em>Space</em> if item is same.</p>",
-        data: { test_part: 'vistriad' }
-    }
-];
-*/
 
 
 // Counterbalance position of A and B
@@ -63,29 +51,6 @@ function saveData() {
 
 }
 
-var test = {
-    type: 'vistriad',
-    stimulus: jsPsych.timelineVariable('stimulus'),
-    data: jsPsych.timelineVariable('data')
-};
-
-var verbal = {
-    type: 'html-keyboard-response',
-    stimulus: jsPsych.timelineVariable('verbalStimulus'),
-    trial_duration: 2000,
-    response_ends_trial: false,
-    choices: jsPsych.ALL_KEYS,
-    on_finish: function(data) {
-        if (data.key_press) {
-            console.log(data.key_press);
-        }
-        
-    },
-    data: {test_part: 'verbal'},
-    prompt: jsPsych.timelineVariable('prompt')
-};
-
-
 var fixation = {
     type: 'html-keyboard-response',
     stimulus: [
@@ -110,6 +75,26 @@ var fixation = {
     data: { test_part: 'fixation' }
 };
 
+var test = {
+    type: 'vistriad',
+    stimulus: jsPsych.timelineVariable('stimulus'),
+    data: jsPsych.timelineVariable('data'),
+    post_trial_gap: 500,
+    cue_duration: 500,
+    left_key: jsPsych.NO_KEYS,
+    right_key:jsPsych.NO_KEYS,
+};
+
+
+var response = {
+    type: 'vistriad',
+    stimulus: jsPsych.timelineVariable('stimulus'),
+    data: jsPsych.timelineVariable('data'),
+    show_targets: true,
+    post_trial_gap: 1500
+};
+
+
 var debrief_block = {
     type: "html-keyboard-response",
     stimulus: function() {
@@ -129,10 +114,9 @@ var debrief_experiment = {
 
 // Experiment blocks: note randomization is done in the stimulus generation phase
 var block_1 = {
-    //timeline: [verbal, fixation, test],
-    timeline: [fixation, test],
-    //timeline_variables: test_stimuli.slice(0, 4, 1),
-    timeline_variables: test_stimuli,
+    timeline: [fixation, test, response],
+    timeline_variables: test_stimuli.slice(0, 4, 1),
+    //timeline_variables: test_stimuli,
     data: { test_part: 'vistriad' },
     randomize_order: false,
     repetitions: 1
@@ -140,9 +124,9 @@ var block_1 = {
 
 
 var block_2 = {
-    timeline: [fixation, test],
+    timeline: [fixation, test, response],
     //timeline_variables: test_stimuli.slice(0, 4, 1),
-    timeline_variables: test_stimuli,
+    timeline_variables: test_stimuli.slice(5, 10, 1),
     randomize_order: false,
     data: { test_part: 'vistriad' },
     repetitions: 1
@@ -162,16 +146,16 @@ var fullscreenOFF ={
 
 var timeline = [];
 
-timeline.push(block_1);
+timeline.push(block_1,debrief_block,block_2);
 //timeline.push(fullscreenON,instructions, block_1, debrief_block, block_2, fullscreenOFF,debrief_experiment);
 
 
 jsPsych.init({
     timeline: timeline,
     on_finish: function() {
-        //jsPsych.data.displayData();
         saveData();
         console.log('Experiment finished.');
 
-    }
+    },
+    default_iti: 1000
 });
