@@ -37,7 +37,7 @@ This code contains the instructions and stimuli and some timing parameters. A te
 ### Linguistic Classifier study
 The main code of the experiment can be found in [lingclass.js](./lingclass/js/lingclass.js).
 This code contains the instructions and stimuli and some timing parameters. The stimuli are taken from the [MultiPic](https://www.bcbl.eu/databases/multipic/) project which includes colour and greyscale linedraws for 750 words.
-The lingclass directory also contains (./lingclass/stimuliSelectionLingClass.ods); a file with a overview of common Mandarin linguistic classifiers, the words that they classify and the availability of pictures for these words.
+The lingclass directory also contains [stimuliSelectionLingClass.ods](./lingclass/stimuliSelectionLingClass.ods); a spreadsheet with an overview of common Mandarin linguistic classifiers, the words that they classify and the availability of pictures for these words.
 
 ### Sketch study
 A series of words is shown at the top of the screen and each participant gets 50 seconds to sketch the word. Path simplification is used to reduce the sketch complexity. The result is saved as an svg file, from which we can extract the ordered strokes and the onset time of each stroke. 
