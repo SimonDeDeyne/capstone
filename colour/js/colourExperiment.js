@@ -1,8 +1,10 @@
 /*
 The following experiment uses jsPsych to display a sequence of stimuli spread over a number of blocks.
 It is based on the study by Gilbert and combines elements from both Experiment 1 and 2.
-
 The experiment has only been tested with recent versions of Chrome.
+
+All participants get to do half of the blocks with verbal interference and the other half without
+The verbal interference blocks order is randomized in the experiment. [TODO]
 */
 
 
@@ -211,6 +213,23 @@ var generateCircle = function(colorTarget, colorDistractor, targetPosition) {
     return stim;
 };
 
+// Adapt for testing
+var send_debrief = function(){
+    if (typeof _record_task_complete == 'undefined') {
+               window.location.href ="debriefing.html";
+    }
+    else{
+        if(_record_task_complete){
+            //window.location.href ="/debrief";
+            window.location.href ="debriefing.html";
+        }else{
+            window.setTimeout(send_debrief, 1000);
+        } 
+    }
+}
+
+
+
 /* Get 4 practice stimuli */
 var practice_stimuli = generateCombinations();
 practice_stimuli = practice_stimuli.slice(0, 4, 1);
@@ -333,7 +352,7 @@ var testblock_2 = {
 };
 
 var testblock_3 = {
-    timeline: [verbal, fixation, test],
+    timeline: [fixation, test],
     timeline_variables: test_stimuli.slice(5, 9, 1),
     randomize_order: false,
     repetitions: 1
@@ -341,7 +360,7 @@ var testblock_3 = {
 
 
 var testblock_4 = {
-    timeline: [verbal, fixation, test],
+    timeline: [fixation, test],
     timeline_variables: test_stimuli.slice(5, 9, 1),
     randomize_order: false,
     repetitions: 1
@@ -374,6 +393,8 @@ jsPsych.init({
         // jsPsych.data.displayData();
         saveData();
         console.log('Experiment finished.');
+        send_debrief();        
 
-    }
+    },
+    default_iti: 1000
 });

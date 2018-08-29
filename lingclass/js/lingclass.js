@@ -1,25 +1,19 @@
 /*
 Experiment on lexical processing effects of visually presented words in English or Mandarin.
 
-https://groups.google.com/forum/#!topic/jspsych/tECOqs3pWHo
-Too fast responses: This feature isn't built into any particular plugin yet, 
-but you assemble a pair of trials to make it work. 
-I would use the html-keyboard-response plugin. 
-Create two trials with identical stimulus parameters. 
-The first trial should have choices: jsPsych.NO_KEYS and trial_duration: <minimum_time>. 
-The second trial should have the desired keyboard responses. 
-From the perspective of the subject, this will appear to be a single screen.
-
-
 */
+
 
 
 var instructions = {
     type: 'instructions',
     pages: [
-        'Welcome to the experiment.<br> Here are the instructions',
-        'Here\'s an example ',
-        'Click next to begin.'
+        '<h3>Welcome to the experiment.</h3>' +
+        '<p>In this experiment an image will appear in the middle of the screen followed by two other images above it.</p>' +
+        '<img src="img/example.png" width=250px></img>' +
+        '<p>Press <em>f</em> if the image left of the bottom image is more related or press <em>j</em> if the image on the right is more related.</p>' +
+        '<p>Some combinations are harder than others, but follow your intuition and try to respond as quickly as possible.</p>',
+        '<p>This experiment will take approximately 10 minutes.</p><p>Click next to begin.</p>'
     ],
     show_clickable_nav: true
 };
@@ -30,6 +24,7 @@ function counterBalanceStimuli(stimuli) {
     'use strict';
     var m = new MersenneTwister();
     var tmp = '';
+    var s;
 
     for (s in stimuli) {
         console.log(stimuli[s].stimulus.targetA);
@@ -51,6 +46,22 @@ function saveData() {
 
 }
 
+// Adapt for testing
+var send_debrief = function(){
+    if (typeof _record_task_complete == 'undefined') {
+               window.location.href ="debriefing.html";
+    }
+    else{
+        if(_record_task_complete){
+            //window.location.href ="/debrief";
+            window.location.href ="debriefing.html";
+        }else{
+            window.setTimeout(send_debrief, 1000);
+        } 
+    }
+}
+
+
 var fixation = {
     type: 'html-keyboard-response',
     stimulus: [
@@ -67,7 +78,6 @@ var fixation = {
         '</div>'
     ].join(''),
     choices: jsPsych.NO_KEYS,
-    trial_duration: 1000,
     trial_duration: function() {
         return jsPsych.randomization.sampleWithoutReplacement([750, 1000, 1250], 1)[0];
     },
@@ -119,7 +129,7 @@ var block_1 = {
     //timeline_variables: test_stimuli,
     data: { test_part: 'vistriad' },
     randomize_order: false,
-    repetitions: 1
+    repetitions: 1,
 };
 
 
@@ -146,15 +156,20 @@ var fullscreenOFF ={
 
 var timeline = [];
 
-timeline.push(block_1,debrief_block,block_2);
+timeline.push(instructions,block_1,debrief_block,block_2);
 //timeline.push(fullscreenON,instructions, block_1, debrief_block, block_2, fullscreenOFF,debrief_experiment);
 
+test_stimuli = jsPsych.randomization.shuffle(test_stimuli);
+test_stimuli = counterBalanceStimuli(test_stimuli);
 
-jsPsych.init({
+
+jsPsych.init({    
+    show_progress_bar: true,
     timeline: timeline,
     on_finish: function() {
         saveData();
         console.log('Experiment finished.');
+        send_debrief();        
 
     },
     default_iti: 1000

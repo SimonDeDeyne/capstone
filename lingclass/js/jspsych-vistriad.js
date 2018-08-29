@@ -9,6 +9,8 @@ jsPsych.plugins.vistriad = (function() {
     'use strict';
     var plugin = {};
 
+    jsPsych.pluginAPI.registerPreload('vistriad', 'stimulus','image');
+
     plugin.info = {
         name: "vistriad",
         description: 'Visual two alternative forced choice task (2AFC)',
@@ -85,16 +87,17 @@ jsPsych.plugins.vistriad = (function() {
 
     plugin.trial = function(display_element, trial) {
 
-        console.log(trial);
+        // add hidden to clas="cell " to add appearing animations
+
         if (trial.show_targets == true){
             console.log('showing targets');
             display_element.innerHTML = [
                 '<div class="content">',
                 '<div class="row">',
-                '<div class="cell hidden" id="targetA">',
+                '<div class="cell" id="targetA">',
                 '<img src="' + trial.stimulus.targetA + '"</img>',
                 '</div>',
-                '<div class="cell hidden" id="targetB">',
+                '<div class="cell" id="targetB">',
                 '<img src="' + trial.stimulus.targetB + '"</img>',
                 '</div>',
                 '</div>',
