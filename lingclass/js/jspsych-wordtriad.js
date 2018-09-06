@@ -95,17 +95,18 @@ jsPsych.plugins.vistriad = (function() {
                 '<div class="content">',
                 '<div class="row">',
                 '<div class="cell hidden" id="targetA">',
-                '<img src="' + trial.stimulus.targetA + '"</img>',
+                trial.stimulus.targetA,
                 '</div>',
                 '<div class="cell hidden" id="targetB">',
-                '<img src="' + trial.stimulus.targetB + '"</img>',
+                trial.stimulus.targetB,
                 '</div>',
                 '</div>',
                 '<div class="row">',
-                '<div class="cell" id="cue"><img class="cue" src="' + trial.stimulus.cue + '"></img></div>',
+                '<div class="cell" id="cue">' + trial.stimulus.cue + '</div>',
                 '</div>',
                 '</div>'].join('');
 
+            // check valid responses settings
             jsPsych.pluginAPI.getKeyboardResponse({
                 callback_function: afterKeyboardResponse,
                 valid_responses: trial.advance_key,
@@ -131,7 +132,7 @@ jsPsych.plugins.vistriad = (function() {
                 '</div>',
                 '</div>',
                 '<div class="row">',
-                '<div class="cell" id="cue"><img class="cue" src="' + trial.stimulus.cue + '"></img></div>',
+                '<div class="cell" id="cue">' + trial.stimulus.cue + '</div>',
                 '</div>',
                 '</div>',
             ].join('');
@@ -164,7 +165,7 @@ jsPsych.plugins.vistriad = (function() {
                 '</div>',
                 '</div>',
                 '<div class="row">',
-                '<div class="cell" id="cue"><img class="cue" src="' + trial.stimulus.cue + '"></img></div>',
+                '<div class="cell" id="cue">' + trial.stimulus.cue + '</div>',
                 '</div>',
                 '</div>',
             ].join('');

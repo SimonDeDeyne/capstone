@@ -4,18 +4,29 @@ Experiment on lexical processing effects of visually presented words in English 
 */
 
 
+var condition  = sessionStorage.condition;
+var instructionsTxt = '';
+switch (condition) {
+    case 'wordsEN':
+        instructionsTxt = instructionsWordsEN;
+        break;
+    case 'picturesEN':
+        instructionsTxt = instructionsPicturesEN;
+        break;
+    case 'wordsZH':
+        instructionsTxt = instructionsWordsZH;
+        break;
+    case 'picturesZH':
+        instructionsTxt = instructionsPicturesZH;
+        break;
+}
 
 var instructions = {
     type: 'instructions',
-    pages: [
-        '<h3>Welcome to the experiment.</h3>' +
-        '<p>In this experiment an image will appear in the middle of the screen followed by two other images above it.</p>' +
-        '<img src="img/example.png" width=250px></img>' +
-        '<p>Press <em>f</em> if the image left of the bottom image is more related or press <em>j</em> if the image on the right is more related.</p>' +
-        '<p>Some combinations are harder than others, but follow your intuition and try to respond as quickly as possible.</p>',
-        '<p>This experiment will take approximately 10 minutes.</p><p>Click next to begin.</p>'
-    ],
-    show_clickable_nav: true
+    pages: instructionsTxt,    
+    show_clickable_nav: true,
+    button_label_next: instructionsNext,
+    button_label_previous: instructionsPrevious,
 };
 
 
@@ -27,7 +38,7 @@ function counterBalanceStimuli(stimuli) {
     var s;
 
     for (s in stimuli) {
-        console.log(stimuli[s].stimulus.targetA);
+        //console.log(stimuli[s].stimulus.targetA);
 
         if (m.random() > 0.5) {
             tmp = stimuli[s].stimulus.targetA;
@@ -50,11 +61,11 @@ function saveData() {
 // Adapt for testing
 var send_debrief = function() {
     if (typeof _record_task_complete == 'undefined') {
-        window.location.href = "debriefing.html";
+        window.location.href = "./EN/debriefing.html";
     } else {
         if (_record_task_complete) {
             //window.location.href ="/debrief";
-            window.location.href = "debriefing.html";
+            window.location.href = "./EN/debriefing.html";
         } else {
             window.setTimeout(send_debrief, 1000);
         }
@@ -89,8 +100,8 @@ var test = {
     type: 'vistriad',
     stimulus: jsPsych.timelineVariable('stimulus'),
     data: jsPsych.timelineVariable('data'),
-    post_trial_gap: 500,
-    cue_duration: 500,
+    post_trial_gap: 200,
+    cue_duration: 200,
     left_key: jsPsych.NO_KEYS,
     right_key: jsPsych.NO_KEYS,
 };
@@ -99,48 +110,62 @@ var test = {
 var response = {
     type: 'vistriad',
     stimulus: jsPsych.timelineVariable('stimulus'),
-    data: jsPsych.timelineVariable('data'),
+    data: jsPsych.timelineVariable('data'),    
+    data: { test_part: 'response' },
+    on_start: function(trial) { $( "#jspsych-target" ).focus(); },
     show_targets: true,
-    post_trial_gap: 1500
+    post_trial_gap: 1000
 };
 
 
-var debrief_block = {
+var block_break = {
     type: "html-keyboard-response",
     stimulus: function() {
-        return "<p>Good job! You deserve a one minute break.</p><br>" +
+        return "<p>Take a short break.</p><br>" +
             "<p>Press any key to proceed</p>";
     }
 };
 
 
-var debrief_experiment = {
-    type: "html-keyboard-response",
-    stimulus: function() {
-        return "<p>Thank you, I will now buy you a beer / coffee / kitten.</p>";
-    }
-};
+
+test_stimuli = jsPsych.randomization.shuffle(test_stimuli);
+test_stimuli = counterBalanceStimuli(test_stimuli);
 
 
 // Experiment blocks: note randomization is done in the stimulus generation phase
 var block_1 = {
     timeline: [fixation, test, response],
-    timeline_variables: test_stimuli.slice(0, 4, 1),
-    //timeline_variables: test_stimuli,
-    data: { test_part: 'vistriad' },
-    randomize_order: true,
+    timeline_variables: test_stimuli.slice(0, 29),
+    randomize_order: false,
     repetitions: 1,
 };
 
 
 var block_2 = {
     timeline: [fixation, test, response],
-    //timeline_variables: test_stimuli.slice(0, 4, 1),
-    timeline_variables: test_stimuli.slice(5, 10, 1),
-    randomize_order: true,
-    data: { test_part: 'vistriad' },
-    repetitions: 1
+    timeline_variables: test_stimuli.slice(29, 58),
+    randomize_order: false,
+    repetitions: 1,
+    data: { block: 2 }
 };
+
+
+var block_3 = {
+    timeline: [fixation, test, response],
+    timeline_variables: test_stimuli.slice(58, 87),
+    randomize_order: false,
+    repetitions: 1,
+    data: { block: 3 }
+};
+
+var block_4 = {
+    timeline: [fixation, test, response],
+    timeline_variables: test_stimuli.slice(87, 116),
+    randomize_order: false,
+    repetitions: 1,
+    data: { block: 4 }
+};
+
 
 var fullscreenON = {
     type: 'fullscreen',
@@ -154,27 +179,40 @@ var fullscreenOFF = {
 };
 
 
+
 var timeline = [];
 
-timeline.push(instructions, block_1, debrief_block, block_2);
+//timeline.push(instructions, block_1, debrief_block, block_2);
+timeline.push(instructions, block_1, block_break, block_2, block_break, block_3, block_break,block_4);
 //timeline.push(fullscreenON,instructions, block_1, debrief_block, block_2, fullscreenOFF,debrief_experiment);
 
-test_stimuli = jsPsych.randomization.shuffle(test_stimuli);
-test_stimuli = counterBalanceStimuli(test_stimuli);
 
 
 jsPsych.init({
-    show_progress_bar: true,
+    //show_progress_bar: true,
     timeline: timeline,
     display_element: 'jspsych-target',
+    preload_images: imageList,
     on_finish: function() {
-        saveData();
 
-        var all_data = jsPsych.data.get().json();
+        jsPsych.data.addProperties({
+            userID: sessionStorage.userID,
+            uid: sessionStorage.uid,
+            age: sessionStorage.age,
+            gender: sessionStorage.gender,
+            language: sessionStorage.language,
+            condition: sessionStorage.condition
+        });
+
+        //saveData();
+
+
+        //var all_data = jsPsych.data.get().csv();
+        var all_data = jsPsych.data.get().filter({ test_part: 'response' }).ignore(['internal_node_id', 'trial_type', 'stimulus']).csv();
         _send_task_data(all_data);
         console.log('Experiment finished.');
         send_debrief();
 
     },
-    default_iti: 1000
+    default_iti: 250
 });

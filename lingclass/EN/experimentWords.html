@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src='../../jspsych/jspsych.js'></script>
+    <script src='../../jspsych/plugins/jspsych-html-keyboard-response.js'></script>
+    <script src='../../jspsych/plugins/jspsych-instructions.js'></script>
+    <script src='../js/jspsych-wordtriad.js'></script>
+    <script src='../js/mersenne-twister.js'></script>
+    <link rel="stylesheet" href='../css/lingclass.css'>
+    <link rel="stylesheet" href='../../jspsych/css/jspsych.css'>
+</head>
+<body>       
+    <div id="jspsych-target"></div>
+</body>
+<script type="application/javascript">
+    $(document).ready(function(){
+        if($("#jspsych-target")){
+            $("#jspsych-target").height( parseInt( $(window).height(), 10) );
+        }
+    });
+</script> 
+<script src='../js/wordsEN.js'></script>
+<script src='../js/utilities.js'></script>
+<script src='../js/lingclass.js'></script>
+</html>
