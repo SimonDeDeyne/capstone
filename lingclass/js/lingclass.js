@@ -44,20 +44,20 @@ function saveData() {
     var timeStamp = Math.floor(Date.now());
     jsPsych.data.get().localSave('csv', 'lingclass' + timeStamp + '.csv');
 
+
 }
 
 // Adapt for testing
-var send_debrief = function(){
+var send_debrief = function() {
     if (typeof _record_task_complete == 'undefined') {
-               window.location.href ="debriefing.html";
-    }
-    else{
-        if(_record_task_complete){
+        window.location.href = "debriefing.html";
+    } else {
+        if (_record_task_complete) {
             //window.location.href ="/debrief";
-            window.location.href ="debriefing.html";
-        }else{
+            window.location.href = "debriefing.html";
+        } else {
             window.setTimeout(send_debrief, 1000);
-        } 
+        }
     }
 }
 
@@ -92,7 +92,7 @@ var test = {
     post_trial_gap: 500,
     cue_duration: 500,
     left_key: jsPsych.NO_KEYS,
-    right_key:jsPsych.NO_KEYS,
+    right_key: jsPsych.NO_KEYS,
 };
 
 
@@ -128,7 +128,7 @@ var block_1 = {
     timeline_variables: test_stimuli.slice(0, 4, 1),
     //timeline_variables: test_stimuli,
     data: { test_part: 'vistriad' },
-    randomize_order: false,
+    randomize_order: true,
     repetitions: 1,
 };
 
@@ -137,17 +137,17 @@ var block_2 = {
     timeline: [fixation, test, response],
     //timeline_variables: test_stimuli.slice(0, 4, 1),
     timeline_variables: test_stimuli.slice(5, 10, 1),
-    randomize_order: false,
+    randomize_order: true,
     data: { test_part: 'vistriad' },
     repetitions: 1
 };
 
-var fullscreenON ={
+var fullscreenON = {
     type: 'fullscreen',
     full_screen_mode: true
 };
 
-var fullscreenOFF ={
+var fullscreenOFF = {
     type: 'fullscreen',
     full_screen_mode: false,
     message: '<p>You will now exit full screen mode'
@@ -156,20 +156,24 @@ var fullscreenOFF ={
 
 var timeline = [];
 
-timeline.push(instructions,block_1,debrief_block,block_2);
+timeline.push(instructions, block_1, debrief_block, block_2);
 //timeline.push(fullscreenON,instructions, block_1, debrief_block, block_2, fullscreenOFF,debrief_experiment);
 
 test_stimuli = jsPsych.randomization.shuffle(test_stimuli);
 test_stimuli = counterBalanceStimuli(test_stimuli);
 
 
-jsPsych.init({    
+jsPsych.init({
     show_progress_bar: true,
     timeline: timeline,
+    display_element: 'jspsych-target',
     on_finish: function() {
         saveData();
+
+        var all_data = jsPsych.data.get().json();
+        _send_task_data(all_data);
         console.log('Experiment finished.');
-        send_debrief();        
+        send_debrief();
 
     },
     default_iti: 1000

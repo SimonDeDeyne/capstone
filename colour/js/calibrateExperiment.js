@@ -18,11 +18,19 @@ var test_stimuli = [
   { stimulus: '<div style="height: 50px;"><svg width="40" height="40" id="circle" class="svg"><rect x="0" y="0" width="40" height="40" class="munsellD"></rect></svg></div>'}
 
 ];
-var test = {
+
+var testA = {
     type: 'html-keyboard-response',
     stimulus: jsPsych.timelineVariable('stimulus'),
     choices: ['f', 'j'],
     prompt: "<p>Indicate orange (f) or brown (j).</p>"
+}
+
+var testB = {
+    type: 'html-keyboard-response',
+    stimulus: jsPsych.timelineVariable('stimulus'),
+    choices: ['f', 'j'],
+    prompt: "<p>Indicate brown (f) or orange (j).</p>"
 }
 
 
@@ -31,7 +39,7 @@ var fixation = {
   stimulus: '<div style="font-size:40px; height: 50px;">+</div>',
   choices: jsPsych.NO_KEYS,
   trial_duration: 1000,
-  prompt: "<p>Indicate orange (f) or brown (j).</p>"
+  prompt: ""
 }
 
 
@@ -41,16 +49,30 @@ var welcome = {
   stimulus: "Welcome to the experiment. Press any key to begin."
 };
 
-timeline.push(welcome);
 
-var test_procedure = {
-  timeline: [fixation, test],
-  timeline_variables: test_stimuli,
-  randomize_order: true,
-  repetitions: 2
+
+if(Math.random() > 0.5){
+  var test_procedure = {
+    timeline: [fixation, testA],
+    timeline_variables: test_stimuli,
+    randomize_order: true,
+    repetitions: 2
+  }
+}
+else {
+  var test_procedure = {
+    timeline: [fixation, testB],
+    timeline_variables: test_stimuli,
+    randomize_order: true,
+    repetitions: 2
+  }
+
 }
 
-timeline.push(test_procedure);
+
+
+
+timeline = [welcome,test_procedure,debrief_block];
 
 var debrief_block = {
   type: "html-keyboard-response",
